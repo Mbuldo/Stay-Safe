@@ -31,6 +31,11 @@ Figma mockup
 
 https://www.figma.com/design/dyqVXVrypKJZ0NhF7nB1VN/Stay-Safe-Mockup?node-id=1-2&t=TGetYAMkqzf3uXNC-1
 
+Deployment Plan
+
+The app will be containerized using Docker and deployed on a cloud platform like AWS or Azure for scalability and accessibility. The deployment process will include building Docker images, pushing them to a registry, and provisioning resources with Terraform. Once deployed, users can access the app through a web link and experience all functionalities from education to the symptom checker.
+
+
 ## Getting Started
 
 ### Prerequisites
