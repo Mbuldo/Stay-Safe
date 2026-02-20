@@ -18,6 +18,11 @@ A comprehensive Sexual and Reproductive Health (SRH) application powered by AI t
 - **Validation**: Zod for type-safe schemas
 - **Monorepo**: npm workspaces
 
+
+##Video Demo
+
+https://www.youtube.com/watch?v=vC0KnBUGuuI
+
 ## Getting Started
 
 ### Prerequisites
