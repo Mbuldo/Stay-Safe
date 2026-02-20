@@ -42,10 +42,10 @@ cd ../../packages/shared && npm install
 3. Set up environment variables:
 ```bash
 # In apps/api/.env
-DEEPSEEK_API_KEY=sk-3f3dba4d354340d192e30b526d4f4d7a
+DEEPSEEK_API_KEY=deepseek-api-key
 DATABASE_PATH=./data/stay-safe.db
 PORT=3000
-JWT_SECRET=stay-safe-development-secret-key-2026
+JWT_SECRET=stay-safe
 
 # In apps/web/.env
 VITE_API_URL=http://localhost:3000/api
