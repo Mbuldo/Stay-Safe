@@ -1,73 +1,76 @@
-# React + TypeScript + Vite
+# Stay-Safe 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive Sexual and Reproductive Health (SRH) application powered by AI to provide personalized health education, risk assessment, and support for university students.
 
-Currently, two official plugins are available:
+##  Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Personalized Risk Assessment**: AI-powered analysis using DeepSeek
+- **Educational Resources**: Curated SRH information and guides
+- **Privacy-First**: All data stored locally with SQLite
+- **User Profiles**: Track health journey and preferences
+- **Smart Recommendations**: Personalized advice based on user data
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: Vite + React + TypeScript + Shadcn UI
+- **Backend**: Node.js + Express + SQLite
+- **AI**: DeepSeek API for intelligent recommendations
+- **Validation**: Zod for type-safe schemas
+- **Monorepo**: npm workspaces
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js >= 18.0.0
+- npm >= 9.0.0
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Install root dependencies:
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install all workspace dependencies:
+```bash
+cd apps/api && npm install
+cd ../web && npm install
+cd ../../packages/shared && npm install
 ```
+
+3. Set up environment variables:
+```bash
+# In apps/api/.env
+DEEPSEEK_API_KEY=sk-3f3dba4d354340d192e30b526d4f4d7a
+DATABASE_PATH=./data/stay-safe.db
+PORT=3000
+JWT_SECRET=stay-safe-development-secret-key-2026
+
+# In apps/web/.env
+VITE_API_URL=http://localhost:3000/api
+```
+
+4. Build shared package:
+```bash
+cd packages/shared
+npm run build
+```
+
+5. Create database directory:
+```bash
+cd apps/api
+mkdir -p data
+```
+
+6. Start development servers:
+```bash
+# From root directory
+npm run dev
+```
+
+The web app will be available at `http://localhost:5173` and the API at `http://localhost:3000`.
+
+## License
+
+MIT License
