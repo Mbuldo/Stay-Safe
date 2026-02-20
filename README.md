@@ -19,9 +19,17 @@ A comprehensive Sexual and Reproductive Health (SRH) application powered by AI t
 - **Monorepo**: npm workspaces
 
 
-##Video Demo
+Video Demo
 
 https://www.youtube.com/watch?v=vC0KnBUGuuI
+
+GitHub Repo Link 
+
+https://github.com/Mbuldo/Stay-Safe.git
+
+Figma mockup
+
+https://www.figma.com/design/dyqVXVrypKJZ0NhF7nB1VN/Stay-Safe-Mockup?node-id=1-2&t=TGetYAMkqzf3uXNC-1
 
 ## Getting Started
 
