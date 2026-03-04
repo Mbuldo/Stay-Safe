@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 28 70% 97%;
+    --foreground: 231 42% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 231 42% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 231 42% 16%;
+    --primary: 338 79% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 272 45% 96%;
+    --secondary-foreground: 231 42% 16%;
+    --muted: 30 58% 95%;
+    --muted-foreground: 230 18% 40%;
+    --accent: 229 49% 25%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 232 26% 86%;
+    --input: 232 26% 86%;
+    --ring: 338 79% 60%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 232 38% 10%;
+    --foreground: 210 40% 98%;
+    --card: 232 33% 15%;
+    --card-foreground: 210 40% 98%;
+    --popover: 232 33% 15%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 338 79% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 233 25% 24%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 233 25% 24%;
+    --muted-foreground: 217 16% 70%;
+    --accent: 231 38% 36%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 232 24% 30%;
+    --input: 232 24% 30%;
+    --ring: 338 79% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 0% 0%, rgba(233, 93, 132, 0.08), transparent 42%),
+      radial-gradient(circle at 100% 0%, rgba(80, 116, 255, 0.08), transparent 35%),
+      linear-gradient(180deg, #fff7f3 0%, #fff8fb 45%, #f8f4ff 100%);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'DM Serif Display', serif;
+    letter-spacing: -0.005em;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'DM Serif Display', serif;
+  }
+
+  .site-shell {
+    @apply min-h-screen;
+    background:
+      radial-gradient(circle at 8% 6%, rgba(255, 197, 143, 0.16), transparent 38%),
+      radial-gradient(circle at 100% 16%, rgba(228, 72, 116, 0.12), transparent 32%),
+      linear-gradient(180deg, #fff7f2 0%, #fff9fc 48%, #f5f1ff 100%);
+  }
+
+  .glass-panel {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+  }
+
+  .neomorph-card {
+    @apply rounded-xl border border-slate-200 bg-slate-50;
+  }
+
+  .gradient-title {
+    @apply bg-gradient-to-r from-[#1f2d63] via-[#6f3d9a] to-[#e84874] bg-clip-text text-transparent;
+  }
+
+  .section-title {
+    @apply font-display text-3xl font-semibold tracking-tight text-[#111a3d] md:text-4xl;
+  }
+
+  .subtle-grid {
+    background-image:
+      linear-gradient(rgba(31, 45, 99, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(31, 45, 99, 0.06) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .masonry-grid {
+    column-gap: 1rem;
+    column-count: 1;
+  }
+
+  .masonry-grid > * {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .masonry-grid {
+      column-count: 2;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .masonry-grid {
+      column-count: 3;
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1eef8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #1f2d63 0%, #e84874 100%);
+  border-radius: 999px;
+}
+
