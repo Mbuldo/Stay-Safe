@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./.test-dist",
+    "rootDir": "../..",
+    "allowImportingTsExtensions": false
+  },
+  "include": [
+    "src/services/api.ts",
+    "src/lib/utils.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".test-dist"
+  ]
+}

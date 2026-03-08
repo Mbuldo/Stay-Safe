@@ -1,9 +1,22 @@
-import { ApiResponse } from '@stay-safe/shared';
+import type { ApiResponse } from '@stay-safe/shared';
 
-const configuredApiBaseUrl = import.meta.env.VITE_API_URL?.trim();
-const API_BASE_URL = configuredApiBaseUrl?.replace(/\/+$/, '') || '/api';
+interface ViteImportMeta extends ImportMeta {
+  env?: {
+    VITE_API_URL?: string;
+  };
+}
 
-class ApiService {
+function getConfiguredApiBaseUrl(): string | undefined {
+  return (import.meta as ViteImportMeta).env?.VITE_API_URL?.trim();
+}
+
+export function resolveApiBaseUrl(configuredApiBaseUrl?: string | null): string {
+  return configuredApiBaseUrl?.trim().replace(/\/+$/, '') || '/api';
+}
+
+export class ApiService {
+  constructor(private readonly apiBaseUrl = resolveApiBaseUrl(getConfiguredApiBaseUrl())) {}
+
   private getHeaders(includeAuth = false): HeadersInit {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
@@ -24,7 +37,7 @@ class ApiService {
     options: RequestInit = {},
     includeAuth = false
   ): Promise<T> {
-    const requestUrl = `${API_BASE_URL}${endpoint}`;
+    const requestUrl = `${this.apiBaseUrl}${endpoint}`;
     let response: Response;
     try {
       response = await fetch(requestUrl, {

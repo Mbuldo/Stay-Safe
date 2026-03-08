@@ -22,7 +22,7 @@ import { initializeDatabase } from './db/client';
 import { errorHandler } from './middleware/validate';
 import { assertServerEnv } from './config/env';
 import openApiSpec from './docs/openapi';
-import { getSwaggerUiHtml } from './docs/swagger-ui';
+import { getSwaggerUiHtml, swaggerUiContentSecurityPolicy } from './docs/swagger-ui';
 
 // Import routes
 import userRoutes from './routes/user.routes';
@@ -82,6 +82,7 @@ app.get('/openapi.json', (_req, res) => {
 });
 
 app.get(['/docs', '/docs/'], (_req, res) => {
+  res.setHeader('Content-Security-Policy', swaggerUiContentSecurityPolicy);
   res.type('html').send(getSwaggerUiHtml('/openapi.json'));
 });
 
