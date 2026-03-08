@@ -1,83 +1,139 @@
-# Stay-Safe 
+# Stay-Safe
 
-A comprehensive Sexual and Reproductive Health (SRH) application powered by AI to provide personalized health education, risk assessment, and support for university students.
+Stay-Safe is a sexual and reproductive health (SRH) platform for university students. It combines trusted educational content, guided risk assessments, student-friendly support resources, and optional AI-assisted guidance in a single monorepo.
 
-##  Features
+## Features
 
-- **Personalized Risk Assessment**: AI-powered analysis using DeepSeek
-- **Educational Resources**: Curated SRH information and guides
-- **Privacy-First**: All data stored locally with SQLite
-- **User Profiles**: Track health journey and preferences
-- **Smart Recommendations**: Personalized advice based on user data
+- Guided SRH risk assessments with practical next steps
+- Educational article library and curated campus/community resources
+- Authentication, profile management, and assessment history
+- Optional DeepSeek-powered AI responses with deterministic fallback behavior
+- Swagger-style API docs at `/docs` and raw OpenAPI spec at `/openapi.json`
+- Automated API and frontend tests using Node's built-in test runner
 
-## Tech Stack
+## Tech stack
 
-- **Frontend**: Vite + React + TypeScript + Shadcn UI
-- **Backend**: Node.js + Express + SQLite
-- **AI**: DeepSeek API for intelligent recommendations
-- **Validation**: Zod for type-safe schemas
-- **Monorepo**: npm workspaces
+- Frontend: React, Vite, TypeScript, Tailwind CSS, Radix UI
+- Backend: Node.js, Express, TypeScript
+- Database: SQLite via `better-sqlite3`
+- Shared package: `@stay-safe/shared` for schemas and types
+- Validation: Zod
+- Monorepo: npm workspaces
 
+## Repository structure
 
-Video Demo
+- `apps/web` — frontend application
+- `apps/api` — backend API
+- `packages/shared` — shared schemas and types
 
-https://www.youtube.com/watch?v=vC0KnBUGuuI
+## Links
 
-GitHub Repo Link 
+- Video demo: 'assets/Demo.webm'
+- GitHub: `https://github.com/Mbuldo/Stay-Safe.git`
+- Figma mockup: `https://www.figma.com/design/dyqVXVrypKJZ0NhF7nB1VN/Stay-Safe-Mockup?node-id=1-2&t=TGetYAMkqzf3uXNC-1`
 
-https://github.com/Mbuldo/Stay-Safe.git
-
-Figma mockup
-
-https://www.figma.com/design/dyqVXVrypKJZ0NhF7nB1VN/Stay-Safe-Mockup?node-id=1-2&t=TGetYAMkqzf3uXNC-1
-
-Deployment Plan
-
-The app will be containerized using Docker and deployed on a cloud platform like AWS or Azure for scalability and accessibility. The deployment process will include building Docker images, pushing them to a registry, and provisioning resources with Terraform. Once deployed, users can access the app through a web link and experience all functionalities from education to the symptom checker.
-
-
-## Getting Started
+## Local development
 
 ### Prerequisites
 
-- Node.js >= 20.0.0
-- npm >= 9.0.0
+- Node.js `>= 20`
+- npm `>= 9`
 
-### Installation
+### Install dependencies
 
-1. Install workspace dependencies from repo root:
 ```bash
 npm install
 ```
 
-2. Configure backend environment:
-```bash
-cd apps/api
-cp .env.example .env
-mkdir data
-```
+### Configure the API
 
-3. Configure frontend environment:
-```bash
-cd ../web
-cp .env.example .env
-```
+Create `apps/api/.env` with values like:
 
-4. Set required API env values:
-```bash
-DEEPSEEK_API_KEY=deepseek-api-key
-DATABASE_PATH=./data/stay-safe.db
+```dotenv
 PORT=3000
-JWT_SECRET=stay-safe
+DATABASE_PATH=./data/stay-safe.db
+CORS_ORIGIN=http://localhost:5173,http://127.0.0.1:5173
+JWT_SECRET=stay-safe-dev-secret
+ARTICLE_SYNC_ENABLED=false
+DEEPSEEK_API_KEY=
 ```
 
-5. Start development servers from root:
+Notes:
+
+- `JWT_SECRET` is required in production.
+- `DEEPSEEK_API_KEY` is optional; if omitted, AI features fall back gracefully.
+- The API uses SQLite, so production hosting must provide persistent disk storage.
+
+### Configure the frontend
+
+For local development, the Vite dev server already proxies `/api` to `http://localhost:3000`, so `VITE_API_URL` is optional.
+
+If you want to point the frontend at a deployed API, create `apps/web/.env` and set:
+
+```dotenv
+VITE_API_URL=https://stay-safe.onrender.com/api
+```
+
+### Start the apps
+
 ```bash
 npm run dev
 ```
 
-The web app will be available at `http://localhost:5173` and the API at `http://localhost:3000`.
+Local URLs:
+
+- Web: `http://localhost:5173`
+- API: `http://localhost:3000`
+- Health check: `http://localhost:3000/health`
+- API docs: `http://localhost:3000/docs`
+- OpenAPI spec: `http://localhost:3000/openapi.json`
+
+## Available scripts
+
+From the repo root:
+
+- `npm run dev` — run web and API in development
+- `npm run build` — build all workspaces
+- `npm run build:web` — build the frontend
+- `npm run build:api` — build the API
+- `npm run test` — run API and frontend tests
+- `npm run test:api` — run backend integration tests
+- `npm run test:web` — run frontend logic tests
+- `npm run lint` — run workspace lint scripts
+- `npm run type-check` — run workspace type checks
+
+## Testing
+
+The project currently uses Node's built-in test runner for lightweight automated coverage.
+
+Current coverage includes:
+
+- API docs and OpenAPI endpoints
+- auth flows
+- articles and resources endpoints
+- assessment flows
+- frontend API service behavior
+- frontend utility functions
+
+Run everything:
+
+```bash
+npm test
+```
+
+## Deployment notes
+
+Recommended deployment for the current architecture:
+
+- Frontend: Vercel or Render Static Site
+- API: Render Web Service or another host with persistent disk
+
+Important:
+
+- The API should **not** be deployed to Vercel serverless in its current form because it depends on local SQLite storage.
+- Set `CORS_ORIGIN` on the API to the exact frontend origin, with no trailing slash.
+- Set `VITE_API_URL` on the frontend to the deployed API base URL ending in `/api`.
 
 ## License
 
-MIT License
+MIT
