@@ -21,6 +21,8 @@ import helmet from 'helmet';
 import { initializeDatabase } from './db/client';
 import { errorHandler } from './middleware/validate';
 import { assertServerEnv } from './config/env';
+import openApiSpec from './docs/openapi';
+import { getSwaggerUiHtml } from './docs/swagger-ui';
 
 // Import routes
 import userRoutes from './routes/user.routes';
@@ -74,6 +76,15 @@ app.get('/health', (_req, res) => {
   });
 });
 
+// API documentation
+app.get('/openapi.json', (_req, res) => {
+  res.json(openApiSpec);
+});
+
+app.get(['/docs', '/docs/'], (_req, res) => {
+  res.type('html').send(getSwaggerUiHtml('/openapi.json'));
+});
+
 // API routes
 app.use('/api/users', userRoutes);
 app.use('/api/assessments', assessmentRoutes);
@@ -110,6 +121,9 @@ async function startServer() {
       console.log(`Port: ${PORT}`);
       console.log(`Environment: ${env.NODE_ENV}`);
       console.log('\nAvailable endpoints:');
+      console.log('  GET  /health');
+      console.log('  GET  /docs');
+      console.log('  GET  /openapi.json');
       console.log('  POST /api/users/register');
       console.log('  POST /api/users/login');
       console.log('  GET  /api/users/me');

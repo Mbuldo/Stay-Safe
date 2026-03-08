@@ -2,6 +2,11 @@
 
 Base URL: `http://localhost:3000/api`
 
+Interactive docs are also available when the API is running:
+
+- Swagger-style UI: `http://localhost:3000/docs`
+- Raw OpenAPI spec: `http://localhost:3000/openapi.json`
+
 ## Authentication
 
 All protected endpoints require a JWT token in the Authorization header:

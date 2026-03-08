@@ -1,8 +1,7 @@
 import { ApiResponse } from '@stay-safe/shared';
 
 const configuredApiBaseUrl = import.meta.env.VITE_API_URL?.trim();
-const API_BASE_URL =
-  configuredApiBaseUrl || (import.meta.env.DEV ? '/api' : 'http://localhost:3000/api');
+const API_BASE_URL = configuredApiBaseUrl?.replace(/\/+$/, '') || '/api';
 
 class ApiService {
   private getHeaders(includeAuth = false): HeadersInit {
