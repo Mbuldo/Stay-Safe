@@ -15,7 +15,7 @@
     "build:web": "npm run build --workspace=apps/web",
     "build:api": "npm run build --workspace=apps/api",
     "lint": "npm run lint --workspaces --if-present",
-    "type-check": "npm run type-check --workspaces"
+    "type-check": "npm run build --workspace=packages/shared && npm run type-check --workspaces"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

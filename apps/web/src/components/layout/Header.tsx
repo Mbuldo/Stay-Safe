@@ -16,6 +16,7 @@ const PUBLIC_LINKS: NavItem[] = [
 const PRIVATE_LINKS: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Assessment', href: '/assessment' },
+  { label: 'AI Assistant', href: '/assistant' },
 ];
 
 export default function Header() {
@@ -187,4 +188,3 @@ export default function Header() {
     </header>
   );
 }
-

@@ -1,8 +1,9 @@
 import Database from 'better-sqlite3';
 import { existsSync, mkdirSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
+import { getApiEnv } from '../config/env';
 
-const DB_PATH = process.env.DATABASE_PATH || join(__dirname, '../../data/stay-safe.db');
+const DB_PATH = getApiEnv().DATABASE_PATH || join(__dirname, '../../data/stay-safe.db');
 
 if (!existsSync(dirname(DB_PATH))) {
   mkdirSync(dirname(DB_PATH), { recursive: true });

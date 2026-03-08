@@ -1,4 +1,5 @@
 import { AIPromptContext, AIResponse } from '@stay-safe/shared';
+import { getApiEnv } from '../config/env';
 
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
@@ -20,13 +21,10 @@ interface DeepSeekApiResponse {
 }
 
 export class DeepSeekService {
-  private readonly apiKey: string | null;
-
   constructor() {
-    const key = process.env.DEEPSEEK_API_KEY?.trim() || null;
-    this.apiKey = key && key.length >= 20 ? key : null;
+    const key = this.getApiKey();
 
-    if (this.apiKey) {
+    if (key) {
       console.log('DeepSeek API integration enabled');
     } else {
       console.warn(
@@ -36,7 +34,7 @@ export class DeepSeekService {
   }
 
   isConfigured(): boolean {
-    return Boolean(this.apiKey);
+    return Boolean(this.getApiKey());
   }
 
   getStatus(): { configured: boolean; provider: string; model: string } {
@@ -48,7 +46,7 @@ export class DeepSeekService {
   }
 
   async analyzeAssessment(context: AIPromptContext): Promise<AIResponse> {
-    if (!this.apiKey) {
+    if (!this.getApiKey()) {
       return this.fallbackAssessmentResponse(context);
     }
 
@@ -105,7 +103,7 @@ Rules:
     userMessage: string,
     conversationHistory: DeepSeekMessage[] = []
   ): Promise<string> {
-    if (!this.apiKey) {
+    if (!this.getApiKey()) {
       return 'AI support is temporarily unavailable. You can still use assessments and resource recommendations while configuration is restored.';
     }
 
@@ -132,7 +130,7 @@ Rules:
     gender?: string;
     interests?: string[];
   }): Promise<string[]> {
-    if (!this.apiKey) {
+    if (!this.getApiKey()) {
       return fallbackHealthTips(userProfile.age);
     }
 
@@ -167,7 +165,8 @@ Respond as JSON:
     messages: DeepSeekMessage[],
     jsonMode = false
   ): Promise<string> {
-    if (!this.apiKey) {
+    const apiKey = this.getApiKey();
+    if (!apiKey) {
       throw new Error('DeepSeek API key is not configured');
     }
 
@@ -187,7 +186,7 @@ Respond as JSON:
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify(requestBody),
         signal: controller.signal,
@@ -210,9 +209,14 @@ Respond as JSON:
     }
   }
 
+  private getApiKey(): string | null {
+    const key = getApiEnv().DEEPSEEK_API_KEY?.trim() || null;
+    return key && key.length > 0 ? key : null;
+  }
+
   private buildAssessmentPrompt(context: AIPromptContext): string {
     const responseLines = context.responses
-      .map((response, index) => {
+      .map((response: { question: string; answer: unknown }, index: number) => {
         const answer =
           typeof response.answer === 'string'
             ? response.answer

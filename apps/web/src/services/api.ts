@@ -1,6 +1,8 @@
 import { ApiResponse } from '@stay-safe/shared';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const configuredApiBaseUrl = import.meta.env.VITE_API_URL?.trim();
+const API_BASE_URL =
+  configuredApiBaseUrl || (import.meta.env.DEV ? '/api' : 'http://localhost:3000/api');
 
 class ApiService {
   private getHeaders(includeAuth = false): HeadersInit {
@@ -23,18 +25,53 @@ class ApiService {
     options: RequestInit = {},
     includeAuth = false
   ): Promise<T> {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      headers: {
-        ...this.getHeaders(includeAuth),
-        ...options.headers,
-      },
-    });
+    const requestUrl = `${API_BASE_URL}${endpoint}`;
+    let response: Response;
+    try {
+      response = await fetch(requestUrl, {
+        ...options,
+        headers: {
+          ...this.getHeaders(includeAuth),
+          ...options.headers,
+        },
+      });
+    } catch (error) {
+      if (error instanceof TypeError) {
+        throw new Error(
+          `Network error while contacting API at ${requestUrl}. Confirm the API server is running and CORS/API URL settings are correct.`
+        );
+      }
+      throw error;
+    }
 
-    const data: ApiResponse<T> = await response.json();
+    const rawBody = await response.text();
+    let data: ApiResponse<T> | null = null;
+    if (rawBody) {
+      try {
+        data = JSON.parse(rawBody) as ApiResponse<T>;
+      } catch (error) {
+        const preview = rawBody.replace(/\s+/g, ' ').slice(0, 180);
+        if (!response.ok) {
+          throw new Error(
+            `API request failed (${response.status}) at ${requestUrl}. Non-JSON response: ${preview}`
+          );
+        }
+        throw new Error(
+          `API returned a non-JSON response (${response.status}) from ${requestUrl}: ${preview}`
+        );
+      }
+    }
+
+    if (!data) {
+      throw new Error(`API returned an empty response (${response.status}) from ${requestUrl}`);
+    }
 
     if (!response.ok || !data.success) {
-      throw new Error(data.error?.message || 'Request failed');
+      const error = new Error(
+        data.error?.message || `Request failed with status ${response.status}`
+      );
+      (error as any).details = data.error?.details;
+      throw error;
     }
 
     return data.data as T;
@@ -171,4 +208,3 @@ class ApiService {
 }
 
 export default new ApiService();
-

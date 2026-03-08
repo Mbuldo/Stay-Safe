@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from '../db/client';
+import { getApiEnv } from '../config/env';
 import { 
   UserProfile, 
   UserRegistration, 
@@ -10,7 +11,6 @@ import {
   UserPreferences 
 } from '@stay-safe/shared';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const JWT_EXPIRES_IN = '7d';
 
 export class UserService {
@@ -198,12 +198,20 @@ export class UserService {
   }
 
   private generateToken(userId: string): string {
-    return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    const secret = getApiEnv().JWT_SECRET;
+    if (!secret) {
+      throw new Error('JWT is not configured');
+    }
+    return jwt.sign({ userId }, secret, { expiresIn: JWT_EXPIRES_IN });
   }
 
   verifyToken(token: string): { userId: string } {
     try {
-      return jwt.verify(token, JWT_SECRET) as { userId: string };
+      const secret = getApiEnv().JWT_SECRET;
+      if (!secret) {
+        throw new Error('JWT is not configured');
+      }
+      return jwt.verify(token, secret) as { userId: string };
     } catch (error) {
       throw new Error('Invalid token');
     }

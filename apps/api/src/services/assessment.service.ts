@@ -12,7 +12,7 @@ import {
   buildDeterministicGuidance,
   calculateRiskScore,
   getAssessmentQuestions,
-} from '../data/assessment-question-bank';
+} from '../content/assessment-question-bank';
 
 export class AssessmentService {
   getQuestions(category?: AssessmentCategory): AssessmentQuestion[] {

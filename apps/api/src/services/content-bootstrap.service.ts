@@ -1,7 +1,8 @@
 import articlesService from './articles.service';
 import resourcesService from './resources.service';
 import externalArticlesService from './external-articles.service';
-import { defaultArticles, nairobiResources } from '../data/default-content';
+import { defaultArticles, nairobiResources } from '../content/default-content';
+import { getApiEnv } from '../config/env';
 
 export class ContentBootstrapService {
   private syncInProgress = false;
@@ -30,7 +31,8 @@ export class ContentBootstrapService {
   }
 
   async refreshExternalArticlesIfNeeded(force = false): Promise<void> {
-    const syncEnabled = process.env.ARTICLE_SYNC_ENABLED !== 'false';
+    const env = getApiEnv();
+    const syncEnabled = env.ARTICLE_SYNC_ENABLED !== 'false';
     if (!syncEnabled) {
       return;
     }
@@ -39,10 +41,7 @@ export class ContentBootstrapService {
       return;
     }
 
-    const intervalHours = Number.parseInt(
-      process.env.ARTICLE_SYNC_INTERVAL_HOURS || '12',
-      10
-    );
+    const intervalHours = env.ARTICLE_SYNC_INTERVAL_HOURS;
     const now = new Date();
     const nextAllowedSyncTime = this.lastExternalSyncAt
       ? new Date(this.lastExternalSyncAt.getTime() + intervalHours * 60 * 60 * 1000)
@@ -55,10 +54,7 @@ export class ContentBootstrapService {
     this.syncInProgress = true;
 
     try {
-      const limit = Number.parseInt(
-        process.env.ARTICLE_SYNC_LIMIT_PER_CATEGORY || '4',
-        10
-      );
+      const limit = env.ARTICLE_SYNC_LIMIT_PER_CATEGORY;
       const imported = await externalArticlesService.refreshFromMedlinePlus(limit);
       this.lastExternalSyncAt = now;
       console.log(

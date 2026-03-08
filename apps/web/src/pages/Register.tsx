@@ -55,7 +55,15 @@ export default function Register() {
       localStorage.setItem('token', result.token);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Registration failed.');
+      const details = Array.isArray(err?.details)
+        ? err.details
+            .map((item: { field?: string; message?: string }) =>
+              item?.field ? `${item.field}: ${item.message}` : item?.message
+            )
+            .filter(Boolean)
+            .join(' | ')
+        : '';
+      setError(details || err.message || 'Registration failed.');
     } finally {
       setLoading(false);
     }
@@ -204,5 +212,4 @@ function Field({ label, id, children }: { label: string; id: string; children: R
     </div>
   );
 }
-
 

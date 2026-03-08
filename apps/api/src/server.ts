@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { existsSync } from 'fs';
 import { resolve } from 'path';
 
-// Load environment variables FIRST (supports root and workspace launches).
+// Load environment variables FIRST
 const envCandidates = [
   resolve(process.cwd(), '.env'),
   resolve(process.cwd(), 'apps/api/.env'),
@@ -20,6 +20,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { initializeDatabase } from './db/client';
 import { errorHandler } from './middleware/validate';
+import { assertServerEnv } from './config/env';
 
 // Import routes
 import userRoutes from './routes/user.routes';
@@ -30,12 +31,26 @@ import resourcesRoutes from './routes/resources.routes';
 import contentBootstrapService from './services/content-bootstrap.service';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const env = assertServerEnv();
+const PORT = env.PORT;
+const allowedCorsOrigins = env.CORS_ORIGIN.split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean);
 
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin || allowedCorsOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+    if (env.NODE_ENV !== 'production') {
+      callback(null, true);
+      return;
+    }
+    callback(null, false);
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -93,7 +108,7 @@ async function startServer() {
       console.log('Stay-Safe API Server');
       console.log('Status: Running');
       console.log(`Port: ${PORT}`);
-      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`Environment: ${env.NODE_ENV}`);
       console.log('\nAvailable endpoints:');
       console.log('  POST /api/users/register');
       console.log('  POST /api/users/login');

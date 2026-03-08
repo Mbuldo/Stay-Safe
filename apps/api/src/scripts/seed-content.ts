@@ -2,7 +2,7 @@ import { initializeDatabase } from '../db/client';
 import articlesService from '../services/articles.service';
 import resourcesService from '../services/resources.service';
 import externalArticlesService from '../services/external-articles.service';
-import { defaultArticles, nairobiResources } from '../data/default-content';
+import { defaultArticles, nairobiResources } from '../content/default-content';
 
 async function seed() {
   console.log('Seeding Stay-Safe content...');
