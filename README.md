@@ -27,8 +27,8 @@ Stay-Safe is a sexual and reproductive health (SRH) platform for university stud
 - `packages/shared` — shared schemas and types
 
 ## Links
-_ Deployed version: https://stay-safe-web-c6iz.vercel.app/
-- Video demo: 'assets/Demo.webm'
+- Deployed version: https://stay-safe-web-c6iz.vercel.app/
+- Video demo: 'https://youtu.be/xwycqnnsN0g'
 - GitHub: `https://github.com/Mbuldo/Stay-Safe.git`
 - Figma mockup: `https://www.figma.com/design/dyqVXVrypKJZ0NhF7nB1VN/Stay-Safe-Mockup?node-id=1-2&t=TGetYAMkqzf3uXNC-1`
 
